@@ -87,10 +87,44 @@
 			return this._modules[moduleId];
 		},
 		update: function(moduleId) {
+			var module = this.get(moduleId);
+			if (module) {
+				if (module.percent < 100 && module.dependencies.length) {
+					var count = 1;
+					module.percent = 0;
+					module.dependencies.forEach(function(dependency) {
+						dependency = this.get(dependency);
+						if (dependency && !dependency.cached) {
+							count++;
+							module.percent += dependency.percent;
+						}
+					}, this);
+					module.percent = module.percent / count;
+				}
 
+				// Update Parents
+				module.parents.forEach(function(parent) {
+					this.update(parent);
+				}, this);
+			}
 		},
 		report: function() {
+			var count = 0,
+				percent = 0;
+			for (var moduleId in this._modules) {
+				if (this._modules.hasOwnProperty(moduleId)) {
+					var module = this.get(moduleId);
+					if (!module.cached) {
+						count += module.dependencies.length + 1;
+						percent += module.percent * (module.dependencies.length + 1);
+					}
+				}
+			}
 
+			if (count > 0) {
+				require.progress = percent / count;
+				require.onProgress(require.progress);
+			}
 		}
 	};
 
