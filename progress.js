@@ -24,6 +24,13 @@
 		}
 	};
 
+	// Add cached modules
+	for (var moduleId in require.cache) {
+		if (require.cache.hasOwnProperty(moduleId) && !/^url:/.test(moduleId)) {
+			monitor.add(moduleId, null, null, true);
+		}
+	}
+
 	// Setup Tracing
 	var trace = function(group, args) {
 		if (group === 'loader-finish-exec') {
