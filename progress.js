@@ -66,7 +66,22 @@
 			}
 		},
 		complete: function(moduleId) {
+			var module = this.get(moduleId);
+			if (module) {
+				// Complete dependencies
+				if (module.dependencies.length) {
+					module.dependencies.forEach(function(dependency) {
+						this.complete(dependency);
+					}, this);
+				}
 
+				// Complete module
+				if (module.percent < 100) {
+					module.percent = 100;
+					this.update(moduleId);
+					this.report();
+				}
+			}
 		},
 		get: function(moduleId) {
 			return this._modules[moduleId];
@@ -89,7 +104,7 @@
 	// Setup Tracing
 	var trace = function(group, args) {
 		if (group === 'loader-finish-exec') {
-			console.log('Completed', args[0]);
+			monitor.complete(args[0]);
 		} else if (group === 'loader-define-module') {
 			var dependencies = args[1].map(function(dependency) {
 				return compactPath(/^\./.test(dependency) ? args[0] + '/../' + dependency : dependency);
