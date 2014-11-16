@@ -26,13 +26,50 @@
 
 		},
 		add: function(moduleId, dependencies, parent, cached) {
+			// Add dependencies
+			dependencies = dependencies || [];
+			dependencies.forEach(function(dependency) {
+				this.add(dependency, null, moduleId);
+			}, this);
 
+			// Add moduleId
+			var module = this.get(moduleId);
+			if (module) {
+				// Merge in new dependencies
+				dependencies.forEach(function(dependency) {
+					if (module.dependencies.indexOf(dependency) === -1) {
+						module.dependencies.push(dependency);
+					}
+				}, this);
+
+				// Merge in new parent
+				if (parent) {
+					if (module.parents.indexOf(parent) === -1) {
+						module.parents.push(parent);
+					}
+				}
+			} else {
+				// New Module
+				this._modules[moduleId] = {
+					percent: cached ? 100 : 0,
+					dependencies: dependencies,
+					parents: parent ? [parent] : [],
+					cached: !!cached
+				};
+			}
+
+			// Complete or update
+			if (cached) {
+				this.complete(moduleId);
+			} else {
+				this.update(moduleId);
+			}
 		},
 		complete: function(moduleId) {
 
 		},
 		get: function(moduleId) {
-
+			return this._modules[moduleId];
 		},
 		update: function(moduleId) {
 
@@ -54,7 +91,10 @@
 		if (group === 'loader-finish-exec') {
 			console.log('Completed', args[0]);
 		} else if (group === 'loader-define-module') {
-			console.log('New Module', args[0], args[1]);
+			var dependencies = args[1].map(function(dependency) {
+				return compactPath(/^\./.test(dependency) ? args[0] + '/../' + dependency : dependency);
+			});
+			monitor.add(args[0], dependencies);
 		}
 	};
 
