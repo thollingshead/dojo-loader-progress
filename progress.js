@@ -1,4 +1,22 @@
 (function() {
+	// Utilities
+	var compactPath = function(path) {
+		var segment, lastSegment;
+		var result = [];
+		path = path.replace(/\\/g, '/').split('/');
+		while (path.length) {
+			segment = path.shift();
+			if (segment == '..' && result.length && lastSegment != '..') {
+				result.pop();
+				lastSegment = result[result.length - 1];
+			} else if (segment != '.') {
+				lastSegment = segment;
+				result.push(segment);
+			}
+		}
+		return result.join('/');
+	};
+
 	// Initialize
 	require.progress = 0;
 
