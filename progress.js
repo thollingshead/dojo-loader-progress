@@ -2,6 +2,28 @@
 	// Initialize
 	require.progress = 0;
 
+	// Monitor Progress
+	var monitor = {
+		_modules: {
+
+		},
+		add: function(moduleId, dependencies, parent, cached) {
+
+		},
+		complete: function(moduleId) {
+
+		},
+		get: function(moduleId) {
+
+		},
+		update: function(moduleId) {
+
+		},
+		report: function() {
+
+		}
+	};
+
 	// Setup Tracing
 	var trace = function(group, args) {
 		if (group === 'loader-finish-exec') {
