@@ -19,6 +19,7 @@
 
 	// Initialize
 	require.progress = 0;
+	require.onProgress = require.onProgress || function() {};
 
 	// Monitor Progress
 	var monitor = {
@@ -110,20 +111,24 @@
 		},
 		report: function() {
 			var count = 0,
-				percent = 0;
+				percent = 0,
+				complete = 0,
+				total = 0;
 			for (var moduleId in this._modules) {
 				if (this._modules.hasOwnProperty(moduleId)) {
 					var module = this.get(moduleId);
 					if (!module.cached) {
 						count += module.dependencies.length + 1;
 						percent += module.percent * (module.dependencies.length + 1);
+						complete += module.percent >= 100 ? 1 : 0;
+						total += 1;
 					}
 				}
 			}
 
 			if (count > 0) {
 				require.progress = percent / count;
-				require.onProgress(require.progress);
+				require.onProgress(require.progress, complete, total);
 			}
 		}
 	};
