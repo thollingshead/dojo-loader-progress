@@ -51,11 +51,8 @@
 		<script type="text/javascript" src="../progress.js"></script>
 		<script type="text/javascript">
 			require([
-				'dijit/ProgressBar',
 				'dojo/domReady!'
-			], function(
-				ProgressBar
-			) {
+			], function() {
 				// Build Progress Bar
 				var container = document.createElement('div');
 				container.className = 'container';
@@ -118,7 +115,8 @@
 				'esri/symbols/SimpleFillSymbol',
 				'esri/symbols/SimpleMarkerSymbol',
 				'esri/symbols/SimpleLineSymbol',
-				'esri/symbols/TextSymbol'
+				'esri/symbols/TextSymbol',
+				'd3/d3'
 			], function(
 			) {
 				// Do stuff here
