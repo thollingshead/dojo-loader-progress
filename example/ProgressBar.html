@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dojo | Progress Example</title>
+		<style>
+			body {
+				text-align: center;
+
+				width: 100%;
+				height: 100%;
+			}
+
+			.container {
+				width: 300px;
+
+				position: absolute;
+				top: 50%;
+				left: calc(50% - 150px);
+			}
+
+			.bar {
+				height: 50px;
+				width: 300px;
+
+				border: 1px solid black;
+			}
+
+			.progress {
+				height: 50px;
+				background-color: orange;
+
+				transition: width 1s;
+			}
+
+			.text {
+
+			}
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+		var dojoConfig = {
+			async: true,
+			packages: [{
+				name: 'd3',
+				location: '//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13'
+			}]
+		};
+		</script>
+		<script type="text/javascript" src="//js.arcgis.com/3.11/"></script>
+		<script type="text/javascript" src="../progress.js"></script>
+		<script type="text/javascript">
+			require([
+				'dijit/ProgressBar',
+				'dojo/domReady!'
+			], function(
+				ProgressBar
+			) {
+				// Build Progress Bar
+				var container = document.createElement('div');
+				container.className = 'container';
+
+				var bar = document.createElement('div');
+				bar.className = 'bar';
+
+				var progress = document.createElement('div');
+				progress.className = 'progress';
+				bar.appendChild(progress);
+
+				var text = document.createElement('div');
+				text.className = 'text';
+
+				container.appendChild(bar);
+				container.appendChild(text);
+				document.body.appendChild(container);
+
+				// Listen to progres
+				require.onProgress = function(value, complete, total) {
+					console.log('Progress - ' + value);
+					progress.style.width = (300 * (value / 100)) + 'px';
+					text.innerHTML = complete + ' of ' + total;
+				};
+			});
+		</script>
+		<script>
+			require([
+				'dijit/form/Form',
+				'dijit/form/FilteringSelect',
+				'esri/graphic',
+				'esri/graphicsUtils',
+				'esri/IdentityManager',
+				'esri/map',
+				'esri/arcgis/Portal',
+				'esri/arcgis/utils',
+				'esri/dijit/analysis/ExtractData',
+				'esri/dijit/analysis/CreateDriveTimeAreas',
+				'esri/geometry/Circle',
+				'esri/geometry/Point',
+				'esri/geometry/Polygon',
+				'esri/geometry/Polyline',
+				'esri/geometry/scaleUtils',
+				'esri/geometry/webMercatorUtils',
+				'esri/layers/ArcGISDynamicMapServiceLayer',
+				'esri/layers/ArcGISImageServiceLayer',
+				'esri/layers/ArcGISTiledMapServiceLayer',
+				'esri/layers/CSVLayer',
+				'esri/layers/FeatureLayer',
+				'esri/layers/LabelLayer',
+				'esri/layers/WMSLayer',
+				'esri/renderers/ClassBreaksRenderer',
+				'esri/renderers/DotDensityRenderer',
+				'esri/renderers/HeatmapRenderer',
+				'esri/renderers/ScaleDependentRenderer',
+				'esri/renderers/SimpleRenderer',
+				'esri/renderers/UniqueValueRenderer',
+				'esri/symbols/PictureFillSymbol',
+				'esri/symbols/PictureMarkerSymbol',
+				'esri/symbols/SimpleFillSymbol',
+				'esri/symbols/SimpleMarkerSymbol',
+				'esri/symbols/SimpleLineSymbol',
+				'esri/symbols/TextSymbol'
+			], function(
+			) {
+				// Do stuff here
+			});
+		</script>
+	</body>
+</html>
